@@ -151,3 +151,61 @@ final result: passed
 - SHA-256: `0AC68934D286704716F9DFA9EE25B2FFDF82B78892AEACE70CEAFBE5BD44981E`.
 
 final result: passed
+
+## Mobile results height adaptation — 2026-07-17
+
+### Source and implementation evidence
+
+- Source visual truth: `C:\Users\DK-EC-~1\AppData\Local\Temp\codex-clipboard-736fe2b9-f042-4a88-8703-ae8555f55b97.png`
+- 390 x 844 implementation capture: `C:\Users\DK-EC-PC3\Desktop\小精靈ip\balloon-game\.worktrees\mobile-results-height\output\playwright\mobile-results-390x844-compact.png`
+- 390 x 700 implementation capture: `C:\Users\DK-EC-PC3\Desktop\小精靈ip\balloon-game\.worktrees\mobile-results-height\output\playwright\mobile-results-390x700-compact.png`
+- State: a real completed 60-second D寶 round, with the result card, D-grade reward, expanded leaderboard form, and page scrollbar visible.
+- Comparison normalization: the 91APP screenshot includes native app chrome and bottom navigation, so the visual comparison used the game-card region as the fidelity target. Both implementation captures show the iframe content only. The live score values differ because the implementation evidence comes from a separate real playthrough; component structure and copy remain the comparison target.
+
+### Responsive measurements
+
+| Requested IAB viewport | Document/client width | Horizontal overflow | Results card width | Title | Progress | Leaderboard title | Body scroll height | Vertical scrolling | Form controls |
+| --- | ---: | --- | ---: | ---: | ---: | ---: | ---: | --- | ---: |
+| 390 x 844 | 375 px | none | 343 px | 31.2 px | 16 px | 19.2 px | 1126 px | available | 48 px minimum |
+| 390 x 700 | 375 px | none | 343 px | 31.2 px | 16 px | 19.2 px | 1126 px | available | 48 px minimum |
+
+The in-app browser's visible content captures are 375 x 812 and 375 x 673 after its own browser chrome and scrollbar are excluded. The requested responsive overrides were 390 x 844 and 390 x 700. The identical computed typography, card width, document width, and scroll height confirm that only non-text vertical spacing changes between the approved mobile states.
+
+### Full-view comparison evidence
+
+The source screenshot and both implementation captures were opened together in one comparison input. Relative to the source, the compact implementation removes excess top padding, reduces the grade medallion and section gaps, and brings the score, progress, reward, and leaderboard into view much earlier. The results hierarchy, centered card, dark-green score/progress surfaces, pale summary cards, yellow reward action, and outlined leaderboard panel remain visually consistent. The 390 x 700 state crops naturally lower in the same scrollable document rather than scaling or truncating the interface.
+
+### Focused-region comparison evidence
+
+The combined comparison was inspected from the title through the leaderboard heading, where the requested adaptation is concentrated. `任務結束`, the D-grade medallion, score labels, next-grade message, reward copy, and `排行榜（前 20 名）` remain sharp and legible at both heights. The input and leaderboard action stay full-width within the panel and retain a 48 px control height. No focused crop was required because these critical regions are readable at original capture resolution in the combined input; the full-resolution files remain available at the paths above.
+
+### Required fidelity surfaces
+
+- Fonts and typography: font family, weight, wrapping, line height, hierarchy, and computed sizes are preserved. Title is 31.2 px, progress is 16 px, and leaderboard title is 19.2 px at both heights; the compact media query does not declare `font-size`.
+- Spacing and layout rhythm: the intentional change is limited to non-text vertical padding, margins, gaps, grade size, and panel spacing. The shorter state stays aligned and scrollable without horizontal overflow.
+- Colors and visual tokens: the existing cream card, deep-green panels, pale-green summaries, white borders, and yellow reward gradient match the source game design.
+- Image quality and asset fidelity: the background image and all existing generated game artwork remain unchanged, sharp, and free of stretching, halos, or replacement assets.
+- Copy and content: results, grade, score labels, next-grade guidance, reward, leaderboard title/note, nickname field, and action copy remain present. Different score values are expected real-play data, not copy drift.
+
+### Findings
+
+- P0: none.
+- P1: none.
+- P2: none.
+- P3: the in-app browser reserves a native scrollbar gutter, so the rendered document client width is 375 px inside the requested 390 px viewport. This is expected browser chrome behavior and does not cause page overflow or clipping.
+
+### Interactions and console checks
+
+- Closed the blocking rules dialog.
+- Selected D寶 and confirmed the start action became enabled.
+- Started and completed a real 60-second round.
+- Confirmed the result card, D-grade reward, leaderboard form, and page scrollbar render in the completed state.
+- Confirmed vertical scrolling at both requested heights.
+- Browser console warnings: 0.
+- Browser console errors: 0.
+
+### Comparison history
+
+- First comparison: source plus both implementation captures showed no actionable P0/P1/P2 difference. The result layout is materially more compact while preserving typography, visual tokens, imagery, copy, control sizes, and scrollability, so no design-QA repair iteration was required.
+
+final result: passed
