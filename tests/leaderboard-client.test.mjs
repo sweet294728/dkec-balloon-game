@@ -149,8 +149,11 @@ function assertSubmitCleanup(browserWindow, document) {
   assertTimerCleared(browserWindow);
 }
 
-test('config starts with an intentionally empty leaderboard endpoint', () => {
-  assert.equal(LEADERBOARD_ENDPOINT, '');
+test('config uses the deployed production leaderboard endpoint', () => {
+  assert.equal(
+    LEADERBOARD_ENDPOINT,
+    'https://script.google.com/macros/s/AKfycbzT41cnNdBb5eBi7S7TSmCKQ7epkI5MWGX3Sx2f8aJpys8WiZj-wbGT6Iwn61Tdor_B/exec',
+  );
 });
 
 test('buildLeaderboardListUrl creates the exact HTTPS JSONP list URL', () => {
