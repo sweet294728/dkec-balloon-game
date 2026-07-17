@@ -163,7 +163,10 @@ test('buildLeaderboardListUrl creates the exact HTTPS JSONP list URL', () => {
 test('buildLeaderboardListUrl rejects an empty endpoint with a Chinese configuration error', () => {
   assert.throws(
     () => buildLeaderboardListUrl('', '__dkecCallback1'),
-    /撠閮剖\?\?\?璁雯\?/,
+    {
+      name: 'TypeError',
+      message: '排行榜尚未設定，請管理者設定排行榜網址。',
+    },
   );
 });
 
@@ -185,7 +188,10 @@ test('buildLeaderboardListUrl rejects non-HTTPS endpoints and unsafe callbacks',
 test('loadLeaderboard validates an empty endpoint before requiring a browser DOM', () => {
   assert.throws(
     () => loadLeaderboard(''),
-    /撠閮剖\?\?\?璁雯\?/,
+    {
+      name: 'TypeError',
+      message: '排行榜尚未設定，請管理者設定排行榜網址。',
+    },
   );
 });
 

@@ -1,5 +1,5 @@
 const CALLBACK_PATTERN = /^__[A-Za-z0-9_]+$/;
-const ENDPOINT_CONFIGURATION_ERROR = '撠閮剖???璁雯?';
+const ENDPOINT_CONFIGURATION_ERROR = '排行榜尚未設定，請管理者設定排行榜網址。';
 let uniqueId = 0;
 
 function parseEndpoint(endpoint) {
