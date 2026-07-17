@@ -208,6 +208,7 @@ test('loadLeaderboard resolves valid records and cleans every JSONP resource', a
   assert.match(callbackName, /^__[A-Za-z0-9_]+$/);
   assert.equal(scriptUrl.searchParams.get('action'), 'list');
   assert.equal(document.head.children[0], script);
+  assert.equal(browserWindow.timers[0].timeoutMs, 20000);
 
   const records = [{ nickname: 'DKEC', score: 42 }];
   browserWindow[callbackName]({ ok: true, records });

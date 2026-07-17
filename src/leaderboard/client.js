@@ -81,7 +81,7 @@ export function buildLeaderboardListUrl(endpoint, callbackName) {
   return url.toString();
 }
 
-export function loadLeaderboard(endpoint, { timeoutMs = 8000 } = {}) {
+export function loadLeaderboard(endpoint, { timeoutMs = 20000 } = {}) {
   const callbackName = createUniqueName('leaderboard');
   const scriptUrl = buildLeaderboardListUrl(endpoint, callbackName);
   const { browserWindow, browserDocument } = getBrowserEnvironment();
