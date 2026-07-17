@@ -76,9 +76,9 @@ class FakeWindow {
     this.listeners.get(type)?.delete(listener);
   }
 
-  dispatchMessage(source, data) {
+  dispatchMessage(source, data, origin = '') {
     for (const listener of this.listeners.get('message') ?? []) {
-      listener({ source, data });
+      listener({ source, data, origin });
     }
   }
 
@@ -350,6 +350,59 @@ test('submitLeaderboard posts own payload fields and accepts only its iframe res
   browserWindow.dispatchMessage(iframe.contentWindow, response);
 
   assert.equal(await promise, response);
+  assertSubmitCleanup(browserWindow, document);
+});
+
+test('submitLeaderboard accepts the Apps Script sandbox grandchild only from its trusted origin', async (t) => {
+  const { browserWindow, document } = installBrowser(t);
+  const promise = submitLeaderboard(ENDPOINT, { requestId: 'request-google-1' });
+  const sandboxWindow = {};
+  const response = {
+    source: 'dkec-leaderboard',
+    requestId: 'request-google-1',
+    ok: true,
+    updated: true,
+    rank: 1,
+  };
+
+  browserWindow.dispatchMessage(
+    sandboxWindow,
+    response,
+    'https://attacker.example',
+  );
+  assert.equal(browserWindow.listeners.get('message').size, 1);
+
+  browserWindow.dispatchMessage(
+    sandboxWindow,
+    response,
+    'https://n-example-0lu-script.googleusercontent.com',
+  );
+  browserWindow.runLatestTimer();
+
+  assert.equal(await promise, response);
+  assertSubmitCleanup(browserWindow, document);
+});
+
+test('submitLeaderboard treats a completed cross-origin form response as delivered for legacy Apps Script deployments', async (t) => {
+  const { browserWindow, document } = installBrowser(t);
+  const promise = submitLeaderboard(ENDPOINT, { requestId: 'request-legacy-1' });
+  const { iframe } = getSubmission(document);
+
+  Object.defineProperty(iframe.contentWindow, 'location', {
+    get() {
+      throw new DOMException('Blocked a frame with origin', 'SecurityError');
+    },
+  });
+  iframe.onload();
+
+  assert.deepEqual(await promise, {
+    source: 'dkec-leaderboard',
+    requestId: 'request-legacy-1',
+    ok: true,
+    updated: true,
+    rank: null,
+    transport: 'iframe-load',
+  });
   assertSubmitCleanup(browserWindow, document);
 });
 

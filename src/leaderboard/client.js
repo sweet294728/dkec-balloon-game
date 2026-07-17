@@ -44,6 +44,23 @@ function errorFromPayload(payload, fallbackMessage) {
   return new Error(message);
 }
 
+function isTrustedAppsScriptOrigin(origin) {
+  if (typeof origin !== 'string' || origin === '') {
+    return false;
+  }
+
+  try {
+    const url = new URL(origin);
+    return url.protocol === 'https:' && (
+      url.hostname === 'script.google.com'
+      || url.hostname === 'script.googleusercontent.com'
+      || url.hostname.endsWith('-script.googleusercontent.com')
+    );
+  } catch {
+    return false;
+  }
+}
+
 function safely(cleanupAction) {
   try {
     cleanupAction();
@@ -148,6 +165,7 @@ export function submitLeaderboard(
     let iframe;
     let form;
     let settled = false;
+    let submissionStarted = false;
     let timerId;
 
     const cleanup = () => {
@@ -159,6 +177,9 @@ export function submitLeaderboard(
         safely(() => form.remove());
       }
       if (iframe) {
+        safely(() => {
+          iframe.onload = null;
+        });
         safely(() => iframe.remove());
       }
     };
@@ -173,7 +194,10 @@ export function submitLeaderboard(
     };
 
     function handleMessage(event) {
-      if (event.source !== iframe.contentWindow) {
+      const fromSubmissionFrame = event.source === iframe.contentWindow;
+      const fromAppsScriptSandbox = isTrustedAppsScriptOrigin(event.origin);
+
+      if (!fromSubmissionFrame && !fromAppsScriptSandbox) {
         return;
       }
 
@@ -196,6 +220,33 @@ export function submitLeaderboard(
       }
     }
 
+    function handleFrameLoad() {
+      if (!submissionStarted) {
+        return;
+      }
+
+      try {
+        const frameUrl = iframe.contentWindow.location.href;
+        if (!frameUrl || frameUrl === 'about:blank') {
+          return;
+        }
+      } catch {
+        // Apps Script loads the POST result in a cross-origin wrapper iframe.
+        // Older deployments finish the write but cannot relay their message
+        // through Google's additional sandbox frame, so a completed remote
+        // navigation is the delivery acknowledgement.
+      }
+
+      settle(resolve, {
+        source: 'dkec-leaderboard',
+        requestId,
+        ok: true,
+        updated: true,
+        rank: null,
+        transport: 'iframe-load',
+      });
+    }
+
     try {
       iframe = browserDocument.createElement('iframe');
       form = browserDocument.createElement('form');
@@ -203,6 +254,7 @@ export function submitLeaderboard(
       iframe.name = frameName;
       iframe.hidden = true;
       iframe.style.display = 'none';
+      iframe.onload = handleFrameLoad;
 
       form.hidden = true;
       form.style.display = 'none';
@@ -225,6 +277,7 @@ export function submitLeaderboard(
 
       browserDocument.body.appendChild(iframe);
       browserDocument.body.appendChild(form);
+      submissionStarted = true;
       form.submit();
     } catch (error) {
       settle(reject, error);

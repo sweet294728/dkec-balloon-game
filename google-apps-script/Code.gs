@@ -520,7 +520,7 @@ function postMessageOutput_(payload) {
   });
   return HtmlService
     .createHtmlOutput(
-      '<script>parent.postMessage(' + json + ", '*');</script>",
+      '<script>parent.parent.postMessage(' + json + ", '*');</script>",
     )
     .setXFrameOptionsMode(HtmlService.XFrameOptionsMode.ALLOWALL);
 }

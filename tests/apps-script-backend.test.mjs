@@ -224,9 +224,12 @@ function parseJsonp(output, callback = 'callback') {
 function parsePostMessage(output) {
   assert.equal(output.xFrameOptionsMode, 'ALLOWALL');
   const match = output.content.match(
-    /^<script>parent\.postMessage\((.*), '\*'\);<\/script>$/s,
+    /^<script>parent\.parent\.postMessage\((.*), '\*'\);<\/script>$/s,
   );
-  assert.ok(match, 'submission output must contain one parent.postMessage call');
+  assert.ok(
+    match,
+    'submission output must reach the game above the Apps Script wrapper',
+  );
   return JSON.parse(match[1]);
 }
 
