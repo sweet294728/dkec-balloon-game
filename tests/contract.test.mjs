@@ -292,6 +292,16 @@ test('Leaderboard exposes the optional submission and top twenty list contracts'
   assert.match(source, /角色/);
 });
 
+test('Leaderboard supports a read-only pre-game mode without submission controls', async () => {
+  const source = await readSource('components', 'Leaderboard.jsx');
+
+  assert.match(source, /function Leaderboard\(\{ result, readOnly = false \}\)/);
+  assert.match(source, /\{!readOnly && \([\s\S]*leaderboard-form/);
+  assert.match(source, /loadLeaderboard\(LEADERBOARD_ENDPOINT\)/);
+  assert.match(source, /visibleRecords\.map/);
+  assert.match(source, /重新載入排行榜/);
+});
+
 test('Results places the leaderboard after reward and before its actions', async () => {
   const source = await readSource('components', 'Results.jsx');
 

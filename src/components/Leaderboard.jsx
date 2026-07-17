@@ -30,7 +30,7 @@ function formatSubmitMessage(response) {
   return `${resultMessage}${rankMessage}`;
 }
 
-export default function Leaderboard({ result }) {
+export default function Leaderboard({ result, readOnly = false }) {
   const [nickname, setNickname] = useState('');
   const [records, setRecords] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -136,49 +136,53 @@ export default function Leaderboard({ result }) {
   return (
     <section className="leaderboard-panel" aria-labelledby="leaderboard-title">
       <h2 id="leaderboard-title">排行榜（前 20 名）</h2>
-      <p className="leaderboard-note">
-        暱稱為選填，不登錄也能繼續領獎或遊玩。
-      </p>
+      {!readOnly && (
+        <>
+          <p className="leaderboard-note">
+            暱稱為選填，不登錄也能繼續領獎或遊玩。
+          </p>
 
-      <form className="leaderboard-form" noValidate onSubmit={handleSubmit}>
-        <label htmlFor="leaderboard-nickname">暱稱（選填）</label>
-        <div className="leaderboard-form-controls">
-          <input
-            aria-describedby={validationError ? 'nickname-error' : undefined}
-            disabled={!endpointConfigured || submitting}
-            id="leaderboard-nickname"
-            maxLength={12}
-            onChange={(event) => {
-              setNickname(event.target.value);
-              setValidationError('');
-            }}
-            type="text"
-            value={nickname}
-          />
-          <button
-            className="primary-action leaderboard-submit"
-            disabled={!endpointConfigured || submitting}
-            type="submit"
-          >
-            {submitting ? '登錄中…' : '登錄排行榜'}
-          </button>
-        </div>
-      </form>
+          <form className="leaderboard-form" noValidate onSubmit={handleSubmit}>
+            <label htmlFor="leaderboard-nickname">暱稱（選填）</label>
+            <div className="leaderboard-form-controls">
+              <input
+                aria-describedby={validationError ? 'nickname-error' : undefined}
+                disabled={!endpointConfigured || submitting}
+                id="leaderboard-nickname"
+                maxLength={12}
+                onChange={(event) => {
+                  setNickname(event.target.value);
+                  setValidationError('');
+                }}
+                type="text"
+                value={nickname}
+              />
+              <button
+                className="primary-action leaderboard-submit"
+                disabled={!endpointConfigured || submitting}
+                type="submit"
+              >
+                {submitting ? '登錄中…' : '登錄排行榜'}
+              </button>
+            </div>
+          </form>
 
-      {validationError && (
-        <p
-          className="leaderboard-status leaderboard-status--error"
-          id="nickname-error"
-          role="alert"
-        >
-          {validationError}
-        </p>
-      )}
+          {validationError && (
+            <p
+              className="leaderboard-status leaderboard-status--error"
+              id="nickname-error"
+              role="alert"
+            >
+              {validationError}
+            </p>
+          )}
 
-      {submitMessage && (
-        <p className="leaderboard-status" role="status">
-          {submitMessage}
-        </p>
+          {submitMessage && (
+            <p className="leaderboard-status" role="status">
+              {submitMessage}
+            </p>
+          )}
+        </>
       )}
 
       {loadError && (
