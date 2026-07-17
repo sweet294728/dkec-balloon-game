@@ -10,6 +10,7 @@ export default function CharacterSelect({
   assetsReady,
   assetsTotal,
   loadError,
+  onOpenLeaderboard,
   onOpenRules,
   onSelect,
   onStart,
@@ -23,14 +24,23 @@ export default function CharacterSelect({
         <p id="selection-title">選擇你的出戰角色</p>
       </header>
 
-      <button
-        className="rules-open-button"
-        onClick={onOpenRules}
-        type="button"
-      >
-        <span aria-hidden="true">?</span>
-        規則說明
-      </button>
+      <div className="selection-utility-actions">
+        <button
+          className="rules-open-button"
+          onClick={onOpenRules}
+          type="button"
+        >
+          <span aria-hidden="true">?</span>
+          規則說明
+        </button>
+        <button
+          className="leaderboard-open-button"
+          onClick={onOpenLeaderboard}
+          type="button"
+        >
+          查看排行榜
+        </button>
+      </div>
 
       <aside hidden className="target-rule-banner" aria-label="射擊規則">
         <p aria-label="選擇 D寶、K寶：只能射 E、C 氣球">

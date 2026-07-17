@@ -715,6 +715,39 @@ button:focus-visible {
   font-weight: 900;
 }
 
+.selection-utility-actions {
+  display: flex;
+  width: 100%;
+  margin: 0 auto 12px;
+  justify-content: center;
+  gap: 8px;
+}
+
+.selection-utility-actions .rules-open-button,
+.leaderboard-open-button {
+  width: auto;
+  min-width: 0;
+  min-height: 44px;
+  padding: 8px 14px;
+  margin: 0;
+  flex: 1 1 0;
+  border: 2px solid rgba(255, 255, 255, 0.82);
+  border-radius: 999px;
+  color: #ffffff;
+  background: rgba(13, 35, 22, 0.9);
+  box-shadow: 0 5px 14px rgba(0, 0, 0, 0.24);
+  font-weight: 900;
+}
+
+.selection-utility-actions .rules-open-button {
+  max-width: 190px;
+}
+
+.leaderboard-open-button {
+  max-width: 190px;
+  background: rgba(25, 70, 43, 0.94);
+}
+
 .rules-open-button span {
   display: inline-grid;
   width: 26px;
@@ -747,6 +780,18 @@ button:focus-visible {
   color: #18251b;
   background: #f5faf4;
   box-shadow: 0 24px 60px rgba(0, 0, 0, 0.48);
+}
+
+.leaderboard-dialog-card {
+  width: min(100%, 680px);
+  max-height: calc(100dvh - 28px);
+  padding: 8px;
+  overflow: auto;
+}
+
+.leaderboard-dialog-card .leaderboard-panel {
+  padding-top: 48px;
+  margin: 0;
 }
 
 .rules-dialog-close {

@@ -302,6 +302,20 @@ test('Leaderboard supports a read-only pre-game mode without submission controls
   assert.match(source, /重新載入排行榜/);
 });
 
+test('selection exposes a read-only leaderboard dialog without opening it automatically', async () => {
+  const appSource = await readSource('App.jsx');
+  const selectSource = await readSource('components', 'CharacterSelect.jsx');
+  const dialogSource = await readSource('components', 'LeaderboardDialog.jsx');
+
+  assert.match(appSource, /const \[leaderboardOpen, setLeaderboardOpen\] = useState\(false\)/);
+  assert.match(appSource, /onOpenLeaderboard=\{\(\) => setLeaderboardOpen\(true\)\}/);
+  assert.match(appSource, /leaderboardOpen && \([\s\S]*LeaderboardDialog/);
+  assert.match(selectSource, /onOpenLeaderboard/);
+  assert.match(selectSource, />\s*查看排行榜\s*</);
+  assert.match(dialogSource, /<Leaderboard readOnly/);
+  assert.doesNotMatch(dialogSource, /leaderboard-form/);
+});
+
 test('Results places the leaderboard after reward and before its actions', async () => {
   const source = await readSource('components', 'Results.jsx');
 

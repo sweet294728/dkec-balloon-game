@@ -5,6 +5,7 @@ import {
 
 import CharacterSelect from './components/CharacterSelect.jsx';
 import Hud from './components/Hud.jsx';
+import LeaderboardDialog from './components/LeaderboardDialog.jsx';
 import Results from './components/Results.jsx';
 import RulesDialog from './components/RulesDialog.jsx';
 import GameCanvas from './game/GameCanvas.jsx';
@@ -39,6 +40,7 @@ export default function App() {
   const [assetsReady, setAssetsReady] = useState(false);
   const [loadError, setLoadError] = useState(false);
   const [rulesOpen, setRulesOpen] = useState(true);
+  const [leaderboardOpen, setLeaderboardOpen] = useState(false);
   const [documentHidden, setDocumentHidden] = useState(
     () => document.hidden,
   );
@@ -107,6 +109,7 @@ export default function App() {
 
     setHudSummary(EMPTY_HUD);
     setFinalResult(null);
+    setLeaderboardOpen(false);
     setScreen('playing');
   };
 
@@ -120,6 +123,7 @@ export default function App() {
     setHudSummary(EMPTY_HUD);
     setFinalResult(null);
     setRulesOpen(true);
+    setLeaderboardOpen(false);
     setScreen('select');
   };
 
@@ -132,6 +136,7 @@ export default function App() {
             assetsReady={assetsReady}
             assetsTotal={REQUIRED_ASSET_SOURCES.length}
             loadError={loadError}
+            onOpenLeaderboard={() => setLeaderboardOpen(true)}
             onOpenRules={() => setRulesOpen(true)}
             onSelect={setSelectedCharacterId}
             onStart={startRound}
@@ -139,6 +144,9 @@ export default function App() {
           />
           {rulesOpen && (
             <RulesDialog onClose={() => setRulesOpen(false)} />
+          )}
+          {leaderboardOpen && (
+            <LeaderboardDialog onClose={() => setLeaderboardOpen(false)} />
           )}
         </>
       )}
