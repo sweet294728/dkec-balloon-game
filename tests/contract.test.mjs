@@ -420,3 +420,20 @@ test('project instructions permit only the approved leaderboard addition', async
   assert.match(prohibitedLine, /multiplayer/);
   assert.match(prohibitedLine, /finished project images/);
 });
+
+test('short mobile results compact only non-text vertical space', () => {
+  const styles = readFileSync(sourcePath('styles.css'), 'utf8');
+  const compactStart = styles.indexOf(
+    '@media (max-width: 539px) and (max-height: 900px)',
+  );
+
+  assert.notEqual(compactStart, -1);
+
+  const compactBlock = styles.slice(compactStart);
+
+  assert.match(compactBlock, /\.results-screen\s*\{[^}]*overflow-x:\s*clip/s);
+  assert.match(compactBlock, /\.results-grade\s*\{[^}]*width:\s*116px/s);
+  assert.match(compactBlock, /\.leaderboard-form input,\s*\.leaderboard-submit\s*\{[^}]*min-height:\s*44px/s);
+  assert.match(compactBlock, /\.results-actions\s*\{[^}]*gap:\s*8px/s);
+  assert.doesNotMatch(compactBlock, /font-size\s*:/);
+});
