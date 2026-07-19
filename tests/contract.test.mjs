@@ -533,6 +533,20 @@ test('project instructions permit only the approved leaderboard addition', async
   assert.match(prohibitedLine, /finished project images/);
 });
 
+test('build scripts use the sandbox-safe Vite config runner', async () => {
+  const packageJson = JSON.parse(await readProjectFile('package.json'));
+
+  assert.equal(packageJson.scripts.build, 'vite build --configLoader runner');
+  assert.match(
+    packageJson.scripts['export:html'],
+    /^vite build --configLoader runner && /,
+  );
+  assert.match(
+    packageJson.scripts['verify:production'],
+    /^vite build --configLoader runner && /,
+  );
+});
+
 test('short mobile results compact only non-text vertical space', () => {
   const styles = readFileSync(sourcePath('styles.css'), 'utf8');
   const compactStart = styles.indexOf(

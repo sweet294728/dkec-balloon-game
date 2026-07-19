@@ -5,10 +5,10 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
-    "export:html": "vite build && node scripts/export-single-html.mjs",
+    "build": "vite build --configLoader runner",
+    "export:html": "vite build --configLoader runner && node scripts/export-single-html.mjs",
     "test": "node --test tests/*.test.mjs",
-    "verify:production": "vite build && node tests/verify-production.mjs"
+    "verify:production": "vite build --configLoader runner && node tests/verify-production.mjs"
   },
   "dependencies": {
     "@vitejs/plugin-react": "^4.3.4",
