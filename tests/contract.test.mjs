@@ -216,6 +216,25 @@ test('round mode flows from App through canvas, HUD, and results actions', async
   assert.match(results, /onStartGoldenMode/);
 });
 
+test('golden mode uses the existing game frame with restrained visual markers', async () => {
+  const [app, styles] = await Promise.all([
+    readSource('App.jsx'),
+    readSource('styles.css'),
+  ]);
+
+  assert.match(app, /app--golden/);
+  assert.match(styles, /\.app--golden \.game-stage/);
+  assert.match(styles, /\.app--golden \.game-surface::after/);
+  assert.match(styles, /\.golden-mode-badge/);
+  assert.match(styles, /\.golden-unlock/);
+  assert.match(styles, /\.golden-start-button/);
+  assert.match(
+    styles,
+    /\.app--golden \.game-surface::after\s*\{[^}]*pointer-events:\s*none/s,
+  );
+  assert.doesNotMatch(styles, /url\([^)]*golden/i);
+});
+
 test('Results shows progress toward the next score grade', async () => {
   const source = await readSource('components', 'Results.jsx');
 

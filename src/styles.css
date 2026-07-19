@@ -269,6 +269,12 @@ button:focus-visible {
   box-shadow: 0 0 42px rgba(0, 0, 0, 0.58);
 }
 
+.app--golden .game-stage {
+  box-shadow:
+    0 0 0 3px rgba(255, 211, 79, 0.72),
+    0 0 42px rgba(255, 183, 38, 0.48);
+}
+
 .hud {
   position: relative;
   z-index: 2;
@@ -327,8 +333,32 @@ button:focus-visible {
   overflow: hidden;
 }
 
+.app--golden .game-surface::after {
+  position: absolute;
+  z-index: 1;
+  inset: 0;
+  border: 3px solid rgba(255, 218, 92, 0.42);
+  box-shadow: inset 0 0 34px rgba(255, 202, 40, 0.22);
+  pointer-events: none;
+  content: '';
+}
+
+.golden-mode-badge {
+  position: absolute;
+  left: 50%;
+  bottom: 2px;
+  padding: 2px 8px;
+  border-radius: 999px;
+  color: #3c2900;
+  background: linear-gradient(135deg, #fff0a6, #ffc43d);
+  font-size: 0.7rem;
+  font-weight: 900;
+  transform: translateX(-50%);
+}
+
 .pause-overlay {
   position: absolute;
+  z-index: 2;
   inset: 0;
   display: grid;
   padding: 24px;
@@ -509,6 +539,23 @@ button:focus-visible {
 
 .leaderboard-form {
   min-width: 0;
+}
+
+.golden-unlock {
+  display: grid;
+  padding: 12px;
+  place-items: center;
+  gap: 9px;
+  border: 2px solid #d89913;
+  border-radius: 14px;
+  color: #4b3400;
+  background: linear-gradient(135deg, #fff7c8, #ffe08a);
+  text-align: center;
+}
+
+.golden-start-button {
+  width: min(100%, 280px);
+  min-height: 48px;
 }
 
 .leaderboard-form label {

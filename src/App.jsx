@@ -46,6 +46,9 @@ export default function App() {
   const [documentHidden, setDocumentHidden] = useState(
     () => document.hidden,
   );
+  const goldenModeClass = roundMode === ROUND_MODES.GOLDEN
+    ? ' app--golden'
+    : '';
 
   useEffect(() => {
     let active = true;
@@ -132,7 +135,7 @@ export default function App() {
   };
 
   return (
-    <main className={`app app--${screen}`}>
+    <main className={`app app--${screen}${goldenModeClass}`}>
       {screen === 'select' && (
         <>
           <CharacterSelect
