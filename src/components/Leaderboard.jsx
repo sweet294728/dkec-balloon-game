@@ -4,8 +4,11 @@ import { loadLeaderboard, submitLeaderboard } from '../leaderboard/client.js';
 import { LEADERBOARD_ENDPOINT } from '../leaderboard/config.js';
 import {
   createLeaderboardPayload,
+  GOLDEN_MODE_NICKNAME,
+  isGoldenModeUnlock,
   validateNickname,
 } from '../leaderboard/rules.js';
+import { ROUND_MODES } from '../game/rules.js';
 
 function createRequestId() {
   try {
@@ -30,8 +33,13 @@ function formatSubmitMessage(response) {
   return `${resultMessage}${rankMessage}`;
 }
 
-export default function Leaderboard({ result, readOnly = false }) {
+export default function Leaderboard({
+  onStartGoldenMode,
+  readOnly = false,
+  result,
+}) {
   const [nickname, setNickname] = useState('');
+  const [goldenUnlocked, setGoldenUnlocked] = useState(false);
   const [records, setRecords] = useState([]);
   const [loading, setLoading] = useState(false);
   const [loadError, setLoadError] = useState('');
@@ -41,6 +49,7 @@ export default function Leaderboard({ result, readOnly = false }) {
   const [loadVersion, setLoadVersion] = useState(0);
   const mountedRef = useRef(true);
   const endpointConfigured = LEADERBOARD_ENDPOINT.trim() !== '';
+  const goldenRound = result?.mode === ROUND_MODES.GOLDEN;
 
   useEffect(() => {
     mountedRef.current = true;
@@ -91,11 +100,25 @@ export default function Leaderboard({ result, readOnly = false }) {
   async function handleSubmit(event) {
     event.preventDefault();
 
-    if (submitting || !endpointConfigured) {
+    if (submitting) {
       return;
     }
 
-    const validation = validateNickname(nickname);
+    if (!goldenRound && isGoldenModeUnlock(nickname)) {
+      setValidationError('');
+      setSubmitMessage('');
+      setGoldenUnlocked(true);
+      return;
+    }
+
+    if (!endpointConfigured) {
+      return;
+    }
+
+    const submissionNickname = goldenRound
+      ? GOLDEN_MODE_NICKNAME
+      : nickname;
+    const validation = validateNickname(submissionNickname);
     if (!validation.valid) {
       setValidationError(validation.error);
       setSubmitMessage('');
@@ -142,30 +165,46 @@ export default function Leaderboard({ result, readOnly = false }) {
             暱稱為選填，不登錄也能繼續領獎或遊玩。
           </p>
 
-          <form className="leaderboard-form" noValidate onSubmit={handleSubmit}>
-            <label htmlFor="leaderboard-nickname">暱稱（選填）</label>
-            <div className="leaderboard-form-controls">
-              <input
-                aria-describedby={validationError ? 'nickname-error' : undefined}
-                disabled={!endpointConfigured || submitting}
-                id="leaderboard-nickname"
-                maxLength={12}
-                onChange={(event) => {
-                  setNickname(event.target.value);
-                  setValidationError('');
-                }}
-                type="text"
-                value={nickname}
-              />
+          {goldenUnlocked ? (
+            <div className="golden-unlock" role="status">
+              <strong>黃金模式已解鎖</strong>
               <button
-                className="primary-action leaderboard-submit"
-                disabled={!endpointConfigured || submitting}
-                type="submit"
+                className="primary-action golden-start-button"
+                onClick={onStartGoldenMode}
+                type="button"
               >
-                {submitting ? '登錄中…' : '登錄排行榜'}
+                開始黃金模式
               </button>
             </div>
-          </form>
+          ) : (
+            <form className="leaderboard-form" noValidate onSubmit={handleSubmit}>
+              <label htmlFor="leaderboard-nickname">
+                {goldenRound ? '暱稱（固定）' : '暱稱（選填）'}
+              </label>
+              <div className="leaderboard-form-controls">
+                <input
+                  aria-describedby={validationError ? 'nickname-error' : undefined}
+                  disabled={submitting || (goldenRound && !endpointConfigured)}
+                  id="leaderboard-nickname"
+                  maxLength={12}
+                  onChange={(event) => {
+                    setNickname(event.target.value);
+                    setValidationError('');
+                  }}
+                  readOnly={goldenRound}
+                  type="text"
+                  value={goldenRound ? GOLDEN_MODE_NICKNAME : nickname}
+                />
+                <button
+                  className="primary-action leaderboard-submit"
+                  disabled={submitting || (goldenRound && !endpointConfigured)}
+                  type="submit"
+                >
+                  {submitting ? '登錄中…' : '登錄排行榜'}
+                </button>
+              </div>
+            </form>
+          )}
 
           {validationError && (
             <p

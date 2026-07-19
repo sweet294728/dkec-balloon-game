@@ -308,7 +308,7 @@ test('Leaderboard exposes the optional submission and top twenty list contracts'
   assert.match(source, /登錄排行榜/);
   assert.match(source, /重新載入排行榜/);
   assert.match(source, /maxLength=\{12\}/);
-  assert.match(source, /validateNickname\(nickname\)/);
+  assert.match(source, /validateNickname\(submissionNickname\)/);
   assert.match(source, /createLeaderboardPayload\(/);
   assert.match(source, /loadLeaderboard\(LEADERBOARD_ENDPOINT\)/);
   assert.match(source, /submitLeaderboard\(LEADERBOARD_ENDPOINT, payload\)/);
@@ -324,11 +324,40 @@ test('Leaderboard exposes the optional submission and top twenty list contracts'
 test('Leaderboard supports a read-only pre-game mode without submission controls', async () => {
   const source = await readSource('components', 'Leaderboard.jsx');
 
-  assert.match(source, /function Leaderboard\(\{ result, readOnly = false \}\)/);
+  assert.match(
+    source,
+    /function Leaderboard\(\{[\s\S]*readOnly = false,[\s\S]*result,[\s\S]*\}\)/,
+  );
   assert.match(source, /\{!readOnly && \([\s\S]*leaderboard-form/);
   assert.match(source, /loadLeaderboard\(LEADERBOARD_ENDPOINT\)/);
   assert.match(source, /visibleRecords\.map/);
   assert.match(source, /重新載入排行榜/);
+});
+
+test('Leaderboard intercepts exact DKEC before submission and locks golden results', async () => {
+  const source = await readSource('components', 'Leaderboard.jsx');
+
+  assert.match(source, /isGoldenModeUnlock\(nickname\)/);
+  assert.match(source, /setGoldenUnlocked\(true\)/);
+  assert.match(source, /黃金模式已解鎖/);
+  assert.match(source, /開始黃金模式/);
+  assert.match(source, /onClick=\{onStartGoldenMode\}/);
+  assert.match(
+    source,
+    /value=\{goldenRound \? GOLDEN_MODE_NICKNAME : nickname\}/,
+  );
+  assert.match(source, /readOnly=\{goldenRound\}/);
+
+  const submitHandler = source.slice(source.indexOf('async function handleSubmit'));
+  const unlockIndex = submitHandler.indexOf('isGoldenModeUnlock(nickname)');
+  const endpointIndex = submitHandler.indexOf('if (!endpointConfigured)');
+  const submitIndex = submitHandler.indexOf(
+    'submitLeaderboard(LEADERBOARD_ENDPOINT, payload)',
+  );
+
+  assert.ok(unlockIndex >= 0);
+  assert.ok(endpointIndex > unlockIndex);
+  assert.ok(submitIndex > endpointIndex);
 });
 
 test('selection exposes a read-only leaderboard dialog without opening it automatically', async () => {
