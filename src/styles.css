@@ -586,8 +586,13 @@ button:focus-visible {
 
 .leaderboard-list {
   min-width: 0;
+  max-height: min(320px, 42dvh);
   padding: 0;
   margin: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-gutter: stable;
+  touch-action: pan-y;
   list-style: none;
 }
 

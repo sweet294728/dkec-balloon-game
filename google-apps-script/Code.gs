@@ -122,7 +122,7 @@ function doGet(e) {
     }
 
     var records = sortRecords_(dedupeRecords_(readRecords_(getRankingsSheet_())));
-    var publicRecords = records.slice(0, 20).map(function (record, index) {
+    var publicRecords = records.slice(0, 100).map(function (record, index) {
       return toPublicRecord_(record, index + 1);
     });
 

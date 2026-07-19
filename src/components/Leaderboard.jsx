@@ -154,11 +154,11 @@ export default function Leaderboard({
     }
   }
 
-  const visibleRecords = records.slice(0, 20);
+  const visibleRecords = records.slice(0, 100);
 
   return (
     <section className="leaderboard-panel" aria-labelledby="leaderboard-title">
-      <h2 id="leaderboard-title">排行榜（前 20 名）</h2>
+      <h2 id="leaderboard-title">排行榜（前 100 名）</h2>
       {!readOnly && (
         <>
           <p className="leaderboard-note">

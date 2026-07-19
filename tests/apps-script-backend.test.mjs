@@ -472,6 +472,31 @@ test('list responses expose only the five public fields', () => {
   assert.equal(JSON.stringify(payload).includes('normalizedNickname'), false);
 });
 
+test('list responses return at most the best one hundred unique nicknames', () => {
+  const harness = createHarness();
+
+  for (let index = 1; index <= 105; index += 1) {
+    const suffix = String(index).padStart(3, '0');
+    const response = submit(harness, {
+      requestId: `request-${suffix}`,
+      nickname: `玩家${suffix}`,
+      score: String(index),
+      correctHits: String(index),
+    });
+    assert.equal(response.ok, true);
+  }
+
+  const payload = parseJsonp(harness.api.doGet({
+    parameter: { action: 'list', callback: 'callback' },
+  }));
+
+  assert.equal(payload.records.length, 100);
+  assert.equal(payload.records[0].score, 105);
+  assert.equal(payload.records[0].rank, 1);
+  assert.equal(payload.records.at(-1).score, 6);
+  assert.equal(payload.records.at(-1).rank, 100);
+});
+
 test('JSONP escapes less-than, U+2028, and U+2029 before script execution', () => {
   const harness = createHarness();
   const dangerousNickname = 'x\u2028y\u2029</s>';

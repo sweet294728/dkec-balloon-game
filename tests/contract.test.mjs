@@ -300,10 +300,13 @@ test('leaderboard client submits through a hidden POST form and iframe messages'
   assert.doesNotMatch(source, /\bfetch\s*\(/);
 });
 
-test('Leaderboard exposes the optional submission and top twenty list contracts', async () => {
-  const source = await readSource('components', 'Leaderboard.jsx');
+test('Leaderboard exposes the optional submission and top one hundred list contracts', async () => {
+  const [source, styles] = await Promise.all([
+    readSource('components', 'Leaderboard.jsx'),
+    readSource('styles.css'),
+  ]);
 
-  assert.match(source, /排行榜（前 20 名）/);
+  assert.match(source, /排行榜（前 100 名）/);
   assert.match(source, /暱稱（選填）/);
   assert.match(source, /登錄排行榜/);
   assert.match(source, /重新載入排行榜/);
@@ -312,13 +315,21 @@ test('Leaderboard exposes the optional submission and top twenty list contracts'
   assert.match(source, /createLeaderboardPayload\(/);
   assert.match(source, /loadLeaderboard\(LEADERBOARD_ENDPOINT\)/);
   assert.match(source, /submitLeaderboard\(LEADERBOARD_ENDPOINT, payload\)/);
-  assert.match(source, /records\.slice\(0, 20\)/);
+  assert.match(source, /records\.slice\(0, 100\)/);
   assert.match(source, /<ol[^>]*className="leaderboard-list"/);
   assert.match(source, /名次/);
   assert.match(source, /暱稱/);
   assert.match(source, /分數/);
   assert.match(source, /等級/);
   assert.match(source, /角色/);
+  assert.match(
+    styles,
+    /\.leaderboard-list\s*\{[^}]*max-height:[^;]+;[^}]*overflow-y:\s*auto/s,
+  );
+  assert.match(
+    styles,
+    /\.leaderboard-list\s*\{[^}]*touch-action:\s*pan-y/s,
+  );
 });
 
 test('Leaderboard supports a read-only pre-game mode without submission controls', async () => {
@@ -417,7 +428,7 @@ test('Apps Script backend enforces validation, ranking, and safe transport contr
   assert.match(source, /Array\.from\s*\([^)]*nickname[^)]*\)/);
   assert.match(source, /\^\[A-Za-z_\$\]\[0-9A-Za-z_\$\]\*\$/);
   assert.match(source, /\^\[0-9A-Za-z_-\]\{8,80\}\$/);
-  assert.match(source, /records\.slice\s*\(\s*0\s*,\s*20\s*\)/);
+  assert.match(source, /records\.slice\s*\(\s*0\s*,\s*100\s*\)/);
   assert.match(source, /ContentService\.MimeType\.JAVASCRIPT/);
   assert.match(source, /HtmlService\.XFrameOptionsMode\.ALLOWALL/);
   assert.match(source, /source\s*:\s*['"]dkec-leaderboard['"]/);
