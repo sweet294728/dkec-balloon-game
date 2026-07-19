@@ -8,6 +8,7 @@ import Leaderboard from './Leaderboard.jsx';
 export default function Results({
   onChangeCharacter,
   onReplay,
+  onStartGoldenMode,
   result,
 }) {
   const grade = getScoreGrade(result.score);
@@ -61,7 +62,10 @@ export default function Results({
           </a>
         )}
 
-        <Leaderboard result={result} />
+        <Leaderboard
+          onStartGoldenMode={onStartGoldenMode}
+          result={result}
+        />
 
         <div className="results-actions">
           <button

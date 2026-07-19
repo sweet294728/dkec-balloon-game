@@ -75,6 +75,7 @@ async function preloadGameImages(characterId) {
 function getRoundSummary(state) {
   return {
     characterId: state.characterId,
+    mode: state.mode,
     score: state.score,
     health: state.health,
     remainingSeconds: Math.ceil(state.remainingSeconds),
@@ -87,6 +88,7 @@ function summariesMatch(left, right) {
   return (
     left !== null
     && left.characterId === right.characterId
+    && left.mode === right.mode
     && left.score === right.score
     && left.health === right.health
     && left.remainingSeconds === right.remainingSeconds
@@ -367,6 +369,7 @@ function drawFrame(
 
 export default function GameCanvas({
   characterId,
+  mode,
   onRoundEnd,
   onStateChange,
   paused = false,
@@ -374,7 +377,7 @@ export default function GameCanvas({
   const canvasRef = useRef(null);
   const boundsRef = useRef({ width: 0, height: 0 });
   const imagesRef = useRef(null);
-  const roundRef = useRef(createRoundState(characterId));
+  const roundRef = useRef(createRoundState(characterId, mode));
   const balloonsRef = useRef([]);
   const heartPickupsRef = useRef([]);
   const dartsRef = useRef([]);
@@ -475,7 +478,7 @@ export default function GameCanvas({
     let animationFrame = null;
     let lastTimestamp = null;
     const context = canvas.getContext('2d');
-    const round = createRoundState(characterId);
+    const round = createRoundState(characterId, mode);
 
     roundRef.current = round;
     balloonsRef.current = round.balloons;
@@ -881,7 +884,7 @@ export default function GameCanvas({
         cancelAnimationFrame(animationFrame);
       }
     };
-  }, [characterId, emitState]);
+  }, [characterId, emitState, mode]);
 
   return (
     <canvas

@@ -187,6 +187,35 @@ test('Results provides separate replay and character-change callbacks', async ()
   assert.match(source, /onClick=\{onChangeCharacter\}/);
 });
 
+test('round mode flows from App through canvas, HUD, and results actions', async () => {
+  const [app, canvas, hud, results] = await Promise.all([
+    readSource('App.jsx'),
+    readSource('game', 'GameCanvas.jsx'),
+    readSource('components', 'Hud.jsx'),
+    readSource('components', 'Results.jsx'),
+  ]);
+
+  assert.match(
+    app,
+    /const \[roundMode, setRoundMode\] = useState\(ROUND_MODES\.NORMAL\)/,
+  );
+  assert.match(app, /<GameCanvas[\s\S]*mode=\{roundMode\}/);
+  assert.match(app, /<Hud[\s\S]*mode=\{roundMode\}/);
+  assert.match(
+    app,
+    /onReplay=\{\(\) => startRound\(ROUND_MODES\.NORMAL\)\}/,
+  );
+  assert.match(
+    app,
+    /onStartGoldenMode=\{\(\) => startRound\(ROUND_MODES\.GOLDEN\)\}/,
+  );
+  assert.match(canvas, /createRoundState\(characterId, mode\)/);
+  assert.match(canvas, /mode:\s*state\.mode/);
+  assert.match(hud, /mode === ROUND_MODES\.GOLDEN/);
+  assert.match(hud, /黃金模式/);
+  assert.match(results, /onStartGoldenMode/);
+});
+
 test('Results shows progress toward the next score grade', async () => {
   const source = await readSource('components', 'Results.jsx');
 
@@ -320,10 +349,10 @@ test('Results places the leaderboard after reward and before its actions', async
   const source = await readSource('components', 'Results.jsx');
 
   assert.match(source, /import Leaderboard from ['"]\.\/Leaderboard\.jsx['"]/);
-  assert.match(source, /<Leaderboard result=\{result\} \/>/);
+  assert.match(source, /<Leaderboard[\s\S]*result=\{result\}[\s\S]*\/>/);
 
   const rewardIndex = source.indexOf('className="reward-action"');
-  const leaderboardIndex = source.indexOf('<Leaderboard result={result} />');
+  const leaderboardIndex = source.indexOf('<Leaderboard');
   const actionsIndex = source.indexOf('className="results-actions"');
 
   assert.ok(rewardIndex >= 0);

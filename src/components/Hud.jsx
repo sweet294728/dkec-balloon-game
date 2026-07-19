@@ -1,7 +1,9 @@
 import { MAX_HEALTH } from '../game/config.js';
+import { ROUND_MODES } from '../game/rules.js';
 
 export default function Hud({
   health,
+  mode,
   remainingSeconds,
   score,
 }) {
@@ -12,6 +14,9 @@ export default function Hud({
 
   return (
     <header className="hud">
+      {mode === ROUND_MODES.GOLDEN && (
+        <span className="golden-mode-badge">黃金模式</span>
+      )}
       <div className="hud-metric">
         <span>分數</span>
         <strong>{score}</strong>

@@ -14,6 +14,7 @@ import {
   MAX_HEALTH,
   ROUND_SECONDS,
 } from './game/config.js';
+import { ROUND_MODES } from './game/rules.js';
 
 const REQUIRED_ASSET_SOURCES = [
   GAME_ASSETS.background,
@@ -34,6 +35,7 @@ const EMPTY_HUD = {
 export default function App() {
   const [screen, setScreen] = useState('select');
   const [selectedCharacterId, setSelectedCharacterId] = useState(null);
+  const [roundMode, setRoundMode] = useState(ROUND_MODES.NORMAL);
   const [hudSummary, setHudSummary] = useState(EMPTY_HUD);
   const [finalResult, setFinalResult] = useState(null);
   const [assetsLoaded, setAssetsLoaded] = useState(0);
@@ -102,11 +104,12 @@ export default function App() {
     };
   }, [screen]);
 
-  const startRound = () => {
+  const startRound = (mode = ROUND_MODES.NORMAL) => {
     if (selectedCharacterId === null || !assetsReady) {
       return;
     }
 
+    setRoundMode(mode);
     setHudSummary(EMPTY_HUD);
     setFinalResult(null);
     setLeaderboardOpen(false);
@@ -120,6 +123,7 @@ export default function App() {
 
   const changeCharacter = () => {
     setSelectedCharacterId(null);
+    setRoundMode(ROUND_MODES.NORMAL);
     setHudSummary(EMPTY_HUD);
     setFinalResult(null);
     setRulesOpen(true);
@@ -139,7 +143,7 @@ export default function App() {
             onOpenLeaderboard={() => setLeaderboardOpen(true)}
             onOpenRules={() => setRulesOpen(true)}
             onSelect={setSelectedCharacterId}
-            onStart={startRound}
+            onStart={() => startRound(ROUND_MODES.NORMAL)}
             selectedCharacterId={selectedCharacterId}
           />
           {rulesOpen && (
@@ -155,12 +159,14 @@ export default function App() {
         <section className="game-stage" aria-label="氣球特攻訓練場">
           <Hud
             health={hudSummary.health}
+            mode={roundMode}
             remainingSeconds={hudSummary.remainingSeconds}
             score={hudSummary.score}
           />
           <div className="game-surface">
             <GameCanvas
               characterId={selectedCharacterId}
+              mode={roundMode}
               onRoundEnd={finishRound}
               onStateChange={setHudSummary}
               paused={documentHidden}
@@ -178,7 +184,8 @@ export default function App() {
       {screen === 'results' && finalResult !== null && (
         <Results
           onChangeCharacter={changeCharacter}
-          onReplay={startRound}
+          onReplay={() => startRound(ROUND_MODES.NORMAL)}
+          onStartGoldenMode={() => startRound(ROUND_MODES.GOLDEN)}
           result={finalResult}
         />
       )}
