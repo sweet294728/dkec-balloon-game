@@ -1,6 +1,12 @@
 const CONTROL_CHARACTER_PATTERN = /[\u0000-\u001f\u007f]/;
 const UNSAFE_LEADING_CHARACTER_PATTERN = /^[=+\-@]/;
 
+export const GOLDEN_MODE_NICKNAME = 'DKEC';
+
+export function isGoldenModeUnlock(value) {
+  return value === GOLDEN_MODE_NICKNAME;
+}
+
 export function normalizeNickname(value) {
   return String(value).trim().normalize('NFKC').trim().toLowerCase();
 }

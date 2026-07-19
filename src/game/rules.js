@@ -4,6 +4,11 @@ import {
   ROUND_SECONDS,
 } from './config.js';
 
+export const ROUND_MODES = Object.freeze({
+  NORMAL: 'normal',
+  GOLDEN: 'golden',
+});
+
 export const SCORE_GRADES = Object.freeze([
   Object.freeze({ id: 'S', label: '王牌特攻', minimum: 55 }),
   Object.freeze({ id: 'A', label: '精英射手', minimum: 40 }),
@@ -67,9 +72,13 @@ export function getGradeReward(gradeId) {
   return GRADE_REWARDS[gradeId] ?? null;
 }
 
-export function createRoundState(characterId) {
+export function createRoundState(
+  characterId,
+  mode = ROUND_MODES.NORMAL,
+) {
   return {
     characterId,
+    mode,
     score: 0,
     health: MAX_HEALTH,
     remainingSeconds: ROUND_SECONDS,
@@ -98,11 +107,12 @@ export function getTargetLetters(characterId) {
 }
 
 export function resolveBalloonHit(state, letter) {
-  const correct = getTargetLetters(state.characterId).includes(letter);
+  const correct = state.mode === ROUND_MODES.GOLDEN
+    || getTargetLetters(state.characterId).includes(letter);
 
   return {
     score: state.score + (correct ? 1 : -1),
-    health: state.health - (correct ? 0 : 1),
+    health: correct ? state.health : Math.max(0, state.health - 1),
     correct,
   };
 }

@@ -18,6 +18,7 @@ import {
   getTargetLetters,
   resolveBalloonHit,
   resolveHeartHit,
+  ROUND_MODES,
   shouldEndRound,
   tickRound,
 } from '../src/game/rules.js';
@@ -137,6 +138,30 @@ test('a wrong balloon hit subtracts score and health', () => {
     correct: false,
   });
   assert.deepEqual(state, { score: 0, health: 5, characterId: 'd' });
+});
+
+test('round state defaults to normal and preserves an explicit golden mode', () => {
+  assert.equal(createRoundState('d').mode, ROUND_MODES.NORMAL);
+  assert.equal(
+    createRoundState('d', ROUND_MODES.GOLDEN).mode,
+    ROUND_MODES.GOLDEN,
+  );
+});
+
+test('golden mode treats every letter balloon as a correct hit', () => {
+  const state = {
+    ...createRoundState('d', ROUND_MODES.GOLDEN),
+    score: 7,
+    health: 5,
+  };
+
+  for (const letter of ['d', 'k', 'e', 'c']) {
+    assert.deepEqual(resolveBalloonHit(state, letter), {
+      score: 8,
+      health: 5,
+      correct: true,
+    });
+  }
 });
 
 test('a heart heals one when health is below the cap', () => {

@@ -5,9 +5,25 @@ import {
   compareLeaderboardEntries,
   createLeaderboardPayload,
   isBetterLeaderboardEntry,
+  isGoldenModeUnlock,
   normalizeNickname,
   validateNickname,
 } from '../src/leaderboard/rules.js';
+
+test('golden unlock requires the exact raw uppercase half-width code', () => {
+  assert.equal(isGoldenModeUnlock('DKEC'), true);
+
+  for (const value of [
+    'dkec',
+    'Dkec',
+    'ＤＫＥＣ',
+    ' DKEC',
+    'DKEC ',
+    '',
+  ]) {
+    assert.equal(isGoldenModeUnlock(value), false);
+  }
+});
 
 test('nickname normalization converts, trims, applies NFKC, and lowercases', () => {
   assert.equal(normalizeNickname('  Ａlice  '), 'alice');
