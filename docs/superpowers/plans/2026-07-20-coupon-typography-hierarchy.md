@@ -88,3 +88,37 @@ Commit the source and generated standalone HTML, push `main`, update and push `g
 - [ ] **Step 4: Verify released bytes**
 
 Download the public page and compare its SHA-256 with the local export and company copy. Expected: all three hashes match.
+
+### Task 4: Increase the supporting text sizes
+
+**Files:**
+- Modify: `tests/contract.test.mjs`
+- Modify: `src/styles.css`
+- Update: `design-qa.md`
+- Regenerate: `export/DKEC氣球特攻隊-單檔版.html`
+
+**Interfaces:**
+- Consumes: the existing `.reward-currency` and `.reward-label` elements.
+- Produces: larger supporting text while preserving the current amount size and reward behavior.
+
+- [ ] **Step 1: Change the CSS contract first**
+
+Require `.reward-currency` to use `0.9rem` and `.reward-label` to use `0.94rem`, while retaining the existing amount `clamp()` assertion.
+
+- [ ] **Step 2: Verify the focused contract fails**
+
+Run: `node --test --test-name-pattern="Results places the square reward action" tests/contract.test.mjs`
+
+Expected: FAIL because the stylesheet still uses `0.72rem` and `0.78rem`.
+
+- [ ] **Step 3: Apply the two font-size changes**
+
+Set `.reward-currency { font-size: 0.9rem; }` and `.reward-label { font-size: 0.94rem; }`. Do not change `.reward-value`, the button dimensions, its link, or any gameplay behavior.
+
+- [ ] **Step 4: Verify focused and full tests**
+
+Run the focused contract, then `npm.cmd test`. Expected: all tests pass.
+
+- [ ] **Step 5: Verify compact rendering and publish**
+
+At 390 x 844, confirm the button remains 116 x 116 px with zero overflow, update the QA evidence, export the standalone HTML, push `main` and `gh-pages`, synchronize the company copy, and compare hashes.

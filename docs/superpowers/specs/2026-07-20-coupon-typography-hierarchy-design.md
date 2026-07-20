@@ -28,3 +28,7 @@ No reward URLs, amounts, grading thresholds, leaderboard behavior, or game behav
 ## Verification
 
 Run the focused contract test, the full test suite, the production build, the single-file export verification, and a rendered mobile result-screen check before publishing.
+
+## Revision: Supporting Text Legibility
+
+The first browser-rendered version made the two supporting text levels too small at compact-mobile size. Keep the amount unchanged, increase `NT$` from `0.72rem` to `0.9rem` (14.4 px / 10.8 pt), and increase `點我領券` from `0.78rem` to `0.94rem` (15.04 px / 11.28 pt). The 116 px square must still have zero horizontal and vertical overflow.
