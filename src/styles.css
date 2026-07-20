@@ -513,13 +513,32 @@ button:focus-visible {
   text-decoration: none;
 }
 
-.reward-action span {
-  font-weight: 900;
+.reward-amount {
+  display: inline-flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: 2px;
+  line-height: 0.86;
 }
 
-.reward-action strong {
-  font-size: 1.2rem;
+.reward-currency {
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+
+.reward-value {
+  font-size: clamp(2.15rem, 9vw, 2.85rem);
+  font-weight: 900;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.07em;
+}
+
+.reward-label {
+  font-size: 0.78rem;
+  font-weight: 900;
   line-height: 1;
+  letter-spacing: 0.04em;
 }
 
 .reward-action:hover {

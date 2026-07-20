@@ -39,8 +39,11 @@ export default function Results({
               rel="noopener noreferrer"
               target="_blank"
             >
-              <span>點我領券</span>
-              <strong>NT${reward.amount}</strong>
+              <strong className="reward-amount">
+                <span className="reward-currency">NT$</span>
+                <span className="reward-value">{reward.amount}</span>
+              </strong>
+              <span className="reward-label">點我領券</span>
             </a>
           )}
         </div>
