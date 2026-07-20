@@ -506,9 +506,9 @@ button:focus-visible {
   gap: 6px;
   border: 4px solid #ffffff;
   border-radius: 24px;
-  color: #2c2104;
-  background: linear-gradient(135deg, #ffe38a, #ffad32);
-  box-shadow: 0 8px 20px rgba(160, 91, 8, 0.3);
+  color: #ffffff;
+  background: linear-gradient(135deg, #ff5a5f, #c91f32);
+  box-shadow: 0 8px 20px rgba(143, 20, 36, 0.34);
   font-weight: 900;
   text-decoration: none;
 }
@@ -530,7 +530,7 @@ button:focus-visible {
 .reward-action:focus-visible {
   outline: 4px solid #ffffff;
   outline-offset: 3px;
-  box-shadow: 0 0 0 7px #8c5105;
+  box-shadow: 0 0 0 7px #8f1424;
 }
 
 .leaderboard-panel {

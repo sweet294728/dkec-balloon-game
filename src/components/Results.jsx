@@ -39,7 +39,7 @@ export default function Results({
               rel="noopener noreferrer"
               target="_blank"
             >
-              <span>領券</span>
+              <span>點我領券</span>
               <strong>NT${reward.amount}</strong>
             </a>
           )}

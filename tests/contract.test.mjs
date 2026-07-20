@@ -406,6 +406,7 @@ test('selection exposes a read-only leaderboard dialog without opening it automa
 
 test('Results places the square reward action beside the grade before the leaderboard', async () => {
   const source = await readSource('components', 'Results.jsx');
+  const styles = await readSource('styles.css');
 
   assert.match(source, /import Leaderboard from ['"]\.\/Leaderboard\.jsx['"]/);
   assert.match(source, /<Leaderboard[\s\S]*result=\{result\}[\s\S]*\/>/);
@@ -414,7 +415,11 @@ test('Results places the square reward action beside the grade before the leader
     /className="results-reward-row"[\s\S]*className=\{`results-grade[\s\S]*className="reward-action"/,
   );
   assert.match(source, /aria-label=\{`領取 \$\{grade\.id\} 級獎勵，官網購物金 NT\$\$\{reward\.amount\}`\}/);
-  assert.match(source, /<span>領券<\/span>[\s\S]*<strong>NT\$\{reward\.amount\}<\/strong>/);
+  assert.match(source, /<span>點我領券<\/span>[\s\S]*<strong>NT\$\{reward\.amount\}<\/strong>/);
+  assert.match(
+    styles,
+    /\.reward-action\s*\{[^}]*color:\s*#ffffff[^}]*background:\s*linear-gradient\(135deg,\s*#ff5a5f,\s*#c91f32\)/s,
+  );
 
   const rewardRowIndex = source.indexOf('className="results-reward-row"');
   const leaderboardIndex = source.indexOf('<Leaderboard');
