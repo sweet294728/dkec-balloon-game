@@ -1,6 +1,6 @@
 # Coupon Typography Design QA
 
-- Source visual truth: `C:/Users/DK-EC-~1/AppData/Local/Temp/codex-clipboard-36c6b628-252d-44e8-9e72-5010952a0bd5.png`
+- Source visual truth: `C:/Users/DK-EC-~1/AppData/Local/Temp/codex-clipboard-05db068f-acc5-4979-85e8-1a5223cb0edc.png`
 - Implementation screenshot: `artifacts/coupon-typography-390x844.png`
 - Viewport: 390 x 844 CSS pixels
 - State: compact-mobile results screen, D grade, NT$10 reward
@@ -9,7 +9,7 @@
 
 The source reference and browser-rendered implementation were opened together for direct comparison. The implementation reproduces the requested hierarchy: a small `NT$` shares the first line and baseline with a much larger numeric amount, while `點我領券` is a smaller second line. The existing project constraints intentionally remain different from the neutral reference canvas: the control stays red, square, white-text, and beside the grade badge.
 
-Browser measurements confirm the compact button remains exactly 116 x 116 px with zero horizontal or vertical overflow. Computed font sizes are 11.52 px for `NT$`, 35.1 px for the amount, and 12.48 px for `點我領券`.
+Browser measurements confirm the compact button remains exactly 116 x 116 px with zero horizontal or vertical overflow. Computed font sizes are 14.4 px (10.8 pt) for `NT$`, 35.1 px (26.3 pt) for the amount, and 15.04 px (11.28 pt) for `點我領券`.
 
 ## Focused-region Evidence
 
@@ -17,7 +17,7 @@ A separate crop was not required because the supplied source is already an isola
 
 ## Required Fidelity Surfaces
 
-- Fonts and typography: passed. The amount is approximately three times the currency size and is the clear focal point; the CTA remains secondary.
+- Fonts and typography: passed. The amount remains dominant while the currency prefix and CTA are now large enough to read comfortably at compact-mobile size.
 - Spacing and layout rhythm: passed. The two-line group is centered inside the unchanged square and does not overflow.
 - Colors and visual tokens: passed. The approved red gradient, white text, border, shadow, hover, and focus treatment are preserved.
 - Image quality and asset fidelity: passed. This change introduces no new image assets and does not alter existing imagery.
@@ -41,7 +41,9 @@ None.
 
 ## Comparison History
 
-- Initial pass: no P0/P1/P2 findings; no visual correction loop was required.
+- Earlier pass: the currency prefix and CTA measured 11.52 px and 12.48 px; user review identified them as too small.
+- Fix applied: increased the two supporting levels to 14.4 px and 15.04 px without changing the amount.
+- Post-fix evidence: the revised 390 x 844 browser capture shows both labels clearly, and the 116 x 116 control still has zero overflow with no console warnings or errors.
 
 ## Follow-up Polish
 

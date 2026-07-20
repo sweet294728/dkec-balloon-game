@@ -522,7 +522,7 @@ button:focus-visible {
 }
 
 .reward-currency {
-  font-size: 0.72rem;
+  font-size: 0.9rem;
   font-weight: 800;
   letter-spacing: -0.02em;
 }
@@ -535,7 +535,7 @@ button:focus-visible {
 }
 
 .reward-label {
-  font-size: 0.78rem;
+  font-size: 0.94rem;
   font-weight: 900;
   line-height: 1;
   letter-spacing: 0.04em;

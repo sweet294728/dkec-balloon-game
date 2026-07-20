@@ -423,12 +423,12 @@ test('Results places the square reward action beside the grade before the leader
     styles,
     /\.reward-amount\s*\{[^}]*display:\s*inline-flex[^}]*align-items:\s*baseline/s,
   );
-  assert.match(styles, /\.reward-currency\s*\{[^}]*font-size:\s*0\.72rem/s);
+  assert.match(styles, /\.reward-currency\s*\{[^}]*font-size:\s*0\.9rem/s);
   assert.match(
     styles,
     /\.reward-value\s*\{[^}]*font-size:\s*clamp\(2\.15rem,\s*9vw,\s*2\.85rem\)/s,
   );
-  assert.match(styles, /\.reward-label\s*\{[^}]*font-size:\s*0\.78rem/s);
+  assert.match(styles, /\.reward-label\s*\{[^}]*font-size:\s*0\.94rem/s);
   assert.match(
     styles,
     /\.reward-action\s*\{[^}]*color:\s*#ffffff[^}]*background:\s*linear-gradient\(135deg,\s*#ff5a5f,\s*#c91f32\)/s,
