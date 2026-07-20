@@ -404,19 +404,42 @@ test('selection exposes a read-only leaderboard dialog without opening it automa
   assert.doesNotMatch(dialogSource, /leaderboard-form/);
 });
 
-test('Results places the leaderboard after reward and before its actions', async () => {
+test('Results places the square reward action beside the grade before the leaderboard', async () => {
   const source = await readSource('components', 'Results.jsx');
 
   assert.match(source, /import Leaderboard from ['"]\.\/Leaderboard\.jsx['"]/);
   assert.match(source, /<Leaderboard[\s\S]*result=\{result\}[\s\S]*\/>/);
+  assert.match(
+    source,
+    /className="results-reward-row"[\s\S]*className=\{`results-grade[\s\S]*className="reward-action"/,
+  );
+  assert.match(source, /aria-label=\{`領取 \$\{grade\.id\} 級獎勵，官網購物金 NT\$\$\{reward\.amount\}`\}/);
+  assert.match(source, /<span>領券<\/span>[\s\S]*<strong>NT\$\{reward\.amount\}<\/strong>/);
 
-  const rewardIndex = source.indexOf('className="reward-action"');
+  const rewardRowIndex = source.indexOf('className="results-reward-row"');
   const leaderboardIndex = source.indexOf('<Leaderboard');
   const actionsIndex = source.indexOf('className="results-actions"');
 
-  assert.ok(rewardIndex >= 0);
-  assert.ok(leaderboardIndex > rewardIndex);
+  assert.ok(rewardRowIndex >= 0);
+  assert.ok(leaderboardIndex > rewardRowIndex);
   assert.ok(actionsIndex > leaderboardIndex);
+});
+
+test('reward action matches the grade footprint on regular and compact results layouts', async () => {
+  const source = await readSource('styles.css');
+
+  assert.match(
+    source,
+    /\.results-reward-row\s*\{[^}]*grid-template-columns:\s*repeat\(2,\s*148px\)/s,
+  );
+  assert.match(
+    source,
+    /\.reward-action\s*\{[^}]*width:\s*148px[^}]*min-height:\s*148px/s,
+  );
+  assert.match(
+    source,
+    /@media \(max-width: 539px\) and \(max-height: 900px\)[\s\S]*\.results-reward-row\s*\{[^}]*grid-template-columns:\s*repeat\(2,\s*116px\)[\s\S]*\.reward-action\s*\{[^}]*width:\s*116px[^}]*min-height:\s*116px/s,
+  );
 });
 
 test('Apps Script backend declares the complete Sheet and service contract', async () => {
