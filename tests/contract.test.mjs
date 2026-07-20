@@ -434,11 +434,11 @@ test('reward action matches the grade footprint on regular and compact results l
   );
   assert.match(
     source,
-    /\.reward-action\s*\{[^}]*width:\s*148px[^}]*min-height:\s*148px/s,
+    /\.reward-action\s*\{[^}]*width:\s*148px[^}]*height:\s*148px[^}]*min-height:\s*148px/s,
   );
   assert.match(
     source,
-    /@media \(max-width: 539px\) and \(max-height: 900px\)[\s\S]*\.results-reward-row\s*\{[^}]*grid-template-columns:\s*repeat\(2,\s*116px\)[\s\S]*\.reward-action\s*\{[^}]*width:\s*116px[^}]*min-height:\s*116px/s,
+    /@media \(max-width: 539px\) and \(max-height: 900px\)[\s\S]*\.results-reward-row\s*\{[^}]*grid-template-columns:\s*repeat\(2,\s*116px\)[\s\S]*\.reward-action\s*\{[^}]*width:\s*116px[^}]*height:\s*116px[^}]*min-height:\s*116px/s,
   );
 });
 

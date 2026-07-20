@@ -408,6 +408,7 @@ button:focus-visible {
 .results-grade {
   display: grid;
   width: 148px;
+  height: 148px;
   min-height: 148px;
   margin: 0;
   padding: 14px;
@@ -497,6 +498,7 @@ button:focus-visible {
 .reward-action {
   display: grid;
   width: 148px;
+  height: 148px;
   min-height: 148px;
   padding: 14px;
   margin: 0;
@@ -1058,14 +1060,16 @@ button:focus-visible {
 
   .results-grade {
     width: 116px;
+    height: 116px;
     min-height: 116px;
-    padding: 8px;
+    padding: 6px;
   }
 
   .reward-action {
     width: 116px;
+    height: 116px;
     min-height: 116px;
-    padding: 8px;
+    padding: 6px;
   }
 
   .results-summary { margin: 10px 0; gap: 6px; }
